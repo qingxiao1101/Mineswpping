@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>z_loser.jpg</file>
+        <file>z_pause.jpg</file>
+        <file>z_run.jpg</file>
+        <file>z_winner.jpg</file>
+    </qresource>
+</RCC>
