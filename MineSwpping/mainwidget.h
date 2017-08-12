@@ -10,26 +10,31 @@
 #include <QTimer>
 #include <QString>
 #include <QHBoxLayout>
+#include <QGridLayout>
 #include <QIcon>
+#include "clicklabel.h"
+#include "publicdate.h"
 
 class MainWidget : public QWidget
 {
     Q_OBJECT
 
 public :
-    MainWidget(QWidget *parent = 0);
+    MainWidget(QWidget *parent, Level le);
     ~MainWidget();
-    void MainWidgetDesk(void);
+    void MainWidgetDesk(Level le);
 
 private slots:
     void TimeUpdate(void);
     void TimeStop(void);
-
+public:
+    QTimer *timer;
 private:
+    ClickLabel * clickLabel ;
     QLabel *timeLabel, *counter;
     QPushButton * emoticon;
     QLineEdit *lineEdit;
-    QTimer *timer;
+
     QLabel * testLabel;
     QLineEdit *testEdit;
     QVBoxLayout *mainLayout;

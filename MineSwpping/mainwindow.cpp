@@ -1,27 +1,27 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget *parent, Level le)
     : QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
 //set main windows
-    this->resize(300, 200);
+    this->resize(le*10, le*14);
     this->setWindowTitle(tr("扫雷"));
-    //set main menu
+//set main menu
         MainWindowDesk();
-    //set main widget
-    mainwidget = new MainWidget();
+ //set main widget
+    mainwidget = new MainWidget(0,le);
     this->setCentralWidget(mainwidget);
 }
-
-
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
 
 void MainWindow::MainWindowDesk(void)
 {
@@ -29,8 +29,8 @@ void MainWindow::MainWindowDesk(void)
     SetAction();
 //选项菜单 界面布局
     SetMenuOption();
-
 }
+
 void MainWindow::SetAction(void)
 {
     openAction = new QAction(tr("&开始"), this);
@@ -44,8 +44,11 @@ void MainWindow::SetAction(void)
     connect(closeAction, SIGNAL(triggered()), this, SLOT(CloseGame()));
 
     levelAction[0] = new QAction(tr("&Level1"), this);
+    connect(levelAction[0], SIGNAL(triggered()), this, SLOT(SetGame1()));
     levelAction[1] = new QAction(tr("&Level2"), this);
+    connect(levelAction[1], SIGNAL(triggered()), this, SLOT(SetGame2()));
     levelAction[2] = new QAction(tr("&Level3"), this);
+    connect(levelAction[2], SIGNAL(triggered()), this, SLOT(SetGame3()));
 }
 
 void MainWindow::SetMenuOption(void)
@@ -65,8 +68,9 @@ void MainWindow::SetMenuOption(void)
 
 void MainWindow::OpenGame(void)
 {
-   QMessageBox::warning(this, tr("提示"), tr("Game Beginn"),
-                                   QMessageBox::Yes | QMessageBox::No);
+   mainwidget-> timer->start();
+//   QMessageBox::warning(this, tr("提示"), tr("Game Beginn"),
+//                                   QMessageBox::Yes | QMessageBox::No);
 }
 
 void MainWindow::CloseGame(void)
@@ -80,6 +84,19 @@ void MainWindow::CloseGame(void)
          case QMessageBox::No:
          default: break;
    }
+}
+
+void MainWindow::SetGame1(void)
+{
+    qDebug()<<"Level1";
+}
+void MainWindow::SetGame2(void)
+{
+    qDebug()<<"Level2";
+}
+void MainWindow::SetGame3(void)
+{
+    qDebug()<<"Level3";
 }
 
 
