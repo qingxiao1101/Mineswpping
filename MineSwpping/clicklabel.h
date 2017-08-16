@@ -25,17 +25,11 @@ public:
        int GetArroundMine(void) const;
        void SetFlag(bool);
        bool GetFlag(void)const;
-       void SetOpenFlag(bool);
-       bool GetOpenFlag(void)const;
-       void Minerecursion(ClickLabel * cl,Point p);
-       void MinerecursionLeftUp(ClickLabel * cl,Point p);
-       void MinerecursionRightDown(ClickLabel * cl,Point p);
-       void MinerecursionUp(ClickLabel * cl,Point p);
-       void MinerecursionDown(ClickLabel * cl,Point p);
-       void MinerecursionLeft(ClickLabel * cl,Point p);
-       void MinerecursionRight(ClickLabel * cl,Point p);
-       void MinerecursionLeftDown(ClickLabel * cl,Point p);
-       void MinerecursionRightUp(ClickLabel * cl,Point p);
+       void SetVisited(bool);
+       bool GetVisited(void)const;
+       void BfsResearch(ClickLabel *cl,Point p);
+       Point Adjction(Point p); //
+
    signals:
        // 鼠标单击信号
        void leftclicked();//IMClickLabel* label);
@@ -58,6 +52,7 @@ private:
        bool flag;
        int attribute;
        bool openFlag;
+       bool visited;
 
 };
 

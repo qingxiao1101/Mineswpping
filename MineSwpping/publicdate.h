@@ -10,4 +10,6 @@ enum Level
 extern Level systemLevel;
 extern ClickLabel * minePointer;
 extern int sumMineCount;
+extern int sumFlag;
+
 #endif // PUBLICDATE_H

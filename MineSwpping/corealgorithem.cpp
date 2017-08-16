@@ -67,23 +67,12 @@ int MineCounterOneCircuit(ClickLabel * cl, Point p,Level le)
     int x = p.x, y = p.y;
     if((p.x>=1)&&(p.y>=1)&&((le*(y-1)+x-1+cl)->GetAttribute()==9)) Minenum++;
     if((p.x>=1)&&((le*y+x-1+cl)->GetAttribute()==9)) Minenum++;
-    if((p.x>=1)&&(p.y+1<=le)&&((le*(y+1)+x-1+cl)->GetAttribute()==9)) Minenum++;
+    if((p.x>=1)&&(p.y+1<le)&&((le*(y+1)+x-1+cl)->GetAttribute()==9)) Minenum++;
     if((p.y>=1)&&((le*(y-1)+x+cl)->GetAttribute()==9)) Minenum++;
-    if((p.y+1<=le)&&((le*(y+1)+x+cl)->GetAttribute()==9)) Minenum++;
-    if((p.x+1<=le)&&(p.y>=1)&&((le*(y-1)+x+1+cl)->GetAttribute()==9)) Minenum++;
-    if((p.x+1<=le)&&((le*y+x+1+cl)->GetAttribute()==9))  Minenum++;
-    if((p.x+1<=le)&&(p.y+1<=le)&&((le*(y+1)+x+1+cl)->GetAttribute()==9))  Minenum++;
+    if((p.y+1<le)&&((le*(y+1)+x+cl)->GetAttribute()==9)) Minenum++;
+    if((p.x+1<le)&&(p.y>=1)&&((le*(y-1)+x+1+cl)->GetAttribute()==9)) Minenum++;
+    if((p.x+1<le)&&((le*y+x+1+cl)->GetAttribute()==9))  Minenum++;
+    if((p.x+1<le)&&(p.y+1<le)&&((le*(y+1)+x+1+cl)->GetAttribute()==9))  Minenum++;
     return Minenum;
 }
 
-/*
-        if((p.x>=1)&&(p.y>=1)&&((le*(y-1)+x-1+cl)->GetAttribute()==9)) {tmp.x=p.x-1;tmp.y=p.y-1;Minerecursion(cl,tmp);}
-        if(p.x>=1&&((le*y+x-1+cl)->GetAttribute()==9)) {tmp.x=p.x-1;tmp.y=p.y;Minerecursion(cl,tmp);}
-        if((p.x>=1)&&(p.y+1<=le)&&((le*(y+1)+x-1+cl)->GetAttribute()==9)) {tmp.x=p.x-1;tmp.y=p.y+1;Minerecursion(cl,tmp);}
-        if(p.y>=1&&((le*(y-1)+x+cl)->GetAttribute()==9))  {tmp.x=p.x;tmp.y=p.y-1;Minerecursion(cl,tmp);}
-        if(p.y+1<=le&&((le*(y+1)+x+cl)->GetAttribute()==9))   {tmp.x=p.x;tmp.y=p.y+1;Minerecursion(cl,tmp);}
-        if((p.x+1<=le)&&(p.y>=1)&&((le*(y-1)+x+1+cl)->GetAttribute()==9)) {tmp.x=p.x+1;tmp.y=p.y-1;Minerecursion(cl,tmp);}
-        if(p.x+1<=le&&((le*y+x+1+cl)->GetAttribute()==9)) {tmp.x=p.x+1;tmp.y=p.y;Minerecursion(cl,tmp);}
-        if((p.x+1<=le)&&(p.y+1<=le)&&((le*(y+1)+x+1+cl)->GetAttribute()==9)) {tmp.x=p.x+1;tmp.y=p.y+1;Minerecursion(cl,tmp);}
-
- */

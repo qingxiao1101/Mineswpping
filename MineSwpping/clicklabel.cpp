@@ -1,6 +1,6 @@
 #include <QMouseEvent>
 #include "clicklabel.h"
-
+#include <QQueue>
 bool Point::operator == (const Point& tmp)
 {
   if( (this->x == tmp.x )&&(this->y == tmp.y))
@@ -75,14 +75,15 @@ bool ClickLabel::GetFlag(void)const
 {
     return flag;
 }
-void ClickLabel::SetOpenFlag(bool of)
+void ClickLabel::SetVisited(bool v)
 {
-    openFlag = of;
+    visited = v;
 }
-bool ClickLabel::GetOpenFlag(void)const
+bool ClickLabel::GetVisited(void)const
 {
-    return openFlag;
+    return visited;
 }
+
 // mark: protected:------------------------------------------------
 void ClickLabel::mouseReleaseEvent(QMouseEvent *ev)
 {
@@ -108,284 +109,161 @@ void ClickLabel::leaveEvent(QEvent *)
 }
 void ClickLabel::RightMausClick(void)
 {
-    setFrameStyle( QFrame::Panel | QFrame::Plain );
-    this->SetFlag(true);
-    if(GetAttribute()==9)
+    if(this->GetFlag()==false&&this->GetVisited()==false)
     {
-        /*youxijieshu*/
-        this->setText(tr("n"));
-    }
-    else
-    {
-//        QString attributestr = QString::number(GetAttribute());
-        this->setText(tr("m"));
+        this->SetFlag(true);
+        this->setText(tr("F"));
+        ++sumFlag;
     }
 }
 void ClickLabel::LeftMausClick(void)
 {
-    this->SetOpenFlag(true);
+    this->SetVisited(true);
     if(this->GetAttribute()==9)
-        this->setText(tr("Bo"));
+        //失败，游戏结束
+        this->setText(tr("@"));
     else
     {
-        MinerecursionLeftUp(minePointer,this->GetAddress());
-        MinerecursionRightDown(minePointer,this->GetAddress());
+        BfsResearch(minePointer,this->GetAddress());
     }
 }
 //=============================================================
-
-void ClickLabel::Minerecursion(ClickLabel * cl,Point p)
+void ClickLabel::BfsResearch(ClickLabel *cl,Point p)
 {
+    QQueue<Point> myQueue;
+    Point tmp,adj;
+
     Level le = systemLevel;
-    int x = p.x, y = p.y; //当前指针坐标
+    int x = p.x, y = p.y;
     int count = (le*y+x+cl)->GetArroundMine(); //当前块周围雷数
     if(count!=0) //周围雷数不为0 显示个数
     {
-         (le*y+x+cl)->setFrameStyle( QFrame::Panel | QFrame::Plain );
-//        QString Minecount = QString::number(count);
+         (le*y+x+cl)->setFrameStyle( QFrame::Box | QFrame::Sunken );
+        QString Minecount = QString::number(count);
+        (le*y+x+cl)->setText(Minecount);
+    }
+    else //当前块雷个数为0， 广度搜索
+    {
+        (le*y+x+cl)->setFrameStyle( QFrame::Box | QFrame::Sunken );
         (le*y+x+cl)->setText(tr("0"));
-    }
-    else //为0，递归旁边8个块
-    {
-         (le*y+x+cl)->setFrameStyle( QFrame::Box | QFrame::Raised );  //翻开 显示0
-        QString Minecount = QString::number(0);
-         (le*y+x+cl)->setText(Minecount);
+        myQueue.push_front(p);
+        while(!myQueue.empty())
+        {
+            tmp = myQueue.front();
+            myQueue.pop_front();
 
-          if((p.x>=1)&&(p.y>=1))
-          {
-              MinerecursionLeftUp(cl,(le*(y-1)+x-1+cl)->GetAddress());
-          }
-
-          if((p.x>=1))
-          {
-              MinerecursionLeft(cl,(le*y+x-1+cl)->GetAddress());
-//              MinerecursionLeftUp(cl,(le*y+x-1+cl)->GetAddress());
-          }
-
-          if((p.x>=1)&&(p.y+1<le))
-          {
-              MinerecursionLeftDown(cl,(le*(y+1)+x-1+cl)->GetAddress());
-//              MinerecursionLeftUp(cl,(le*(y+1)+x-1+cl)->GetAddress());
-          }
-
-          if((p.y>=1))
-          {
-              MinerecursionUp(cl,(le*(y-1)+x+cl)->GetAddress());
-//              MinerecursionLeftUp(cl,(le*(y-1)+x+cl)->GetAddress());
-          }
-
-/****************************************************************/
-
-          if((p.y+1<le))
-          {
-              MinerecursionDown(cl,(le*(y+1)+x+cl)->GetAddress());
-          }
-
-          if((p.x+1<le))
-          {
-              MinerecursionRightUp(cl,(le*(y-1)+x+1+cl)->GetAddress());
-          }
-
-          if(p.x+1<le)
-          {
-              MinerecursionRight(cl,(le*y+x+1+cl)->GetAddress());
-          }
-
-          if((p.x+1<le)&&(p.y+1<le))
-          {
-              MinerecursionRightDown(cl,(le*(y+1)+x+1+cl)->GetAddress());
-          }
+            adj = Adjction(tmp);
+            while(adj.x!=-1&&adj.y!=-1) //相邻元素不为空，执行
+            {
+                if((cl+adj.x+le*adj.y)->GetVisited()==false)
+                {
+                    (cl+adj.x+le*adj.y)->SetVisited(true);
+                    (le*adj.y+adj.x+cl)->setFrameStyle( QFrame::Box | QFrame::Sunken );  //翻开 显示0
+                    (le*adj.y+adj.x+cl)->setText(tr("0"));
+                    myQueue.push_back(adj);
+                }
+                adj = Adjction(tmp);
+            }
+        }
     }
 }
-
-/**********************************************************************************************/
-
-void  ClickLabel::MinerecursionLeftUp(ClickLabel * cl,Point p)
+Point ClickLabel::Adjction(Point p) //返回-1，-1坐标表示没有相邻节点，否则返回坐标地址
 {
+    ClickLabel *cl = minePointer;
     Level le = systemLevel;
-    int x = p.x, y = p.y; //当前指针坐标
-    int count = (le*y+x+cl)->GetArroundMine(); //当前块周围雷数
-    if(count!=0) //周围雷数不为0 显示个数
+    int x = p.x, y = p.y;
+    Point tmp;
+    //左上
+    if((p.x>=1)&&(p.y>=1)&&((cl+le*(y-1)+x-1)->GetVisited()==false)
+            &&((cl+le*(y-1)+x-1)->GetArroundMine()==0)) {tmp.x=x-1;tmp.y=y-1;return tmp;}
+    else if((p.x>=1)&&(p.y>=1)&&((cl+le*(y-1)+x-1)->GetVisited()==false)
+            &&((cl+le*(y-1)+x-1)->GetArroundMine()!=0))
     {
-         (le*y+x+cl)->setFrameStyle( QFrame::Panel | QFrame::Plain );
-        QString Minecount = QString::number(count);
-        (le*y+x+cl)->setText(Minecount);
+        (cl+le*(y-1)+x-1)->setFrameStyle( QFrame::Box | QFrame::Sunken );
+        QString Minecount = QString::number((cl+le*(y-1)+x-1)->GetArroundMine());
+        (cl+le*(y-1)+x-1)->setText(Minecount);
     }
-    else //为0，递归旁边8个块
+    //左
+    if((p.x>=1)&&((cl+le*y+x-1)->GetVisited()==false)
+            &&((cl+le*y+x-1)->GetArroundMine()==0)) {tmp.x=x-1;tmp.y=y;return tmp;}
+    else if((p.x>=1)&&((cl+le*y+x-1)->GetVisited()==false)
+            &&((cl+le*y+x-1)->GetArroundMine()!=0))
     {
-         (le*y+x+cl)->setFrameStyle( QFrame::Box | QFrame::Raised );  //翻开 显示0
-         (le*y+x+cl)->setText(tr("0"));
-          if((p.x>=1)&&(p.y>=1)) MinerecursionLeftUp(cl,(le*(y-1)+x-1+cl)->GetAddress());
-          if(p.x>=1) MinerecursionLeft(cl,(le*y+x-1+cl)->GetAddress());
-          if((p.x>=1)&&(p.y+1<le)) MinerecursionLeftDown(cl,(le*(y+1)+x-1+cl)->GetAddress());
-          if(p.y>=1)  MinerecursionUp(cl,(le*(y-1)+x+cl)->GetAddress());
+        (cl+le*y+x-1)->setFrameStyle( QFrame::Box | QFrame::Sunken );
+        QString Minecount = QString::number((cl+le*y+x-1)->GetArroundMine());
+        (cl+le*y+x-1)->setText(Minecount);
     }
+    //左下
+    if((p.x>=1)&&(p.y+1<le)&&((cl+le*(y+1)+x-1)->GetVisited()==false)
+            &&((cl+le*(y+1)+x-1)->GetArroundMine()==0)) {tmp.x=x-1;tmp.y=y+1;return tmp;}
+    else if((p.x>=1)&&(p.y+1<le)&&((cl+le*(y+1)+x-1)->GetVisited()==false)
+            &&((cl+le*(y+1)+x-1)->GetArroundMine()!=0))
+    {
+        (cl+le*(y+1)+x-1)->setFrameStyle( QFrame::Box | QFrame::Sunken );
+        QString Minecount = QString::number((cl+le*(y+1)+x-1)->GetArroundMine());
+        (cl+le*(y+1)+x-1)->setText(Minecount);
+    }
+    //上
+    if((p.y>=1)&&((cl+le*(y-1)+x)->GetVisited()==false)
+           &&((cl+le*(y-1)+x)->GetArroundMine()==0) ){tmp.x=x;tmp.y=y-1;return tmp;}
+    else if((p.y>=1)&&((cl+le*(y-1)+x)->GetVisited()==false)
+            &&((cl+le*(y-1)+x)->GetArroundMine()!=0) )
+    {
+        (cl+le*(y-1)+x)->setFrameStyle( QFrame::Box | QFrame::Sunken );
+        QString Minecount = QString::number((cl+le*(y-1)+x)->GetArroundMine());
+        (cl+le*(y-1)+x)->setText(Minecount);
+    }
+    //下
+     if((p.y+1<le)&&((cl+le*(y+1)+x)->GetVisited()==false)
+             &&((cl+le*(y+1)+x)->GetArroundMine()==0)){tmp.x=x;tmp.y=y+1;return tmp;}
+     else if((p.y+1<le)&&((cl+le*(y+1)+x)->GetVisited()==false)
+             &&((cl+le*(y+1)+x)->GetArroundMine()!=0))
+     {
+         (cl+le*(y+1)+x)->setFrameStyle( QFrame::Box | QFrame::Sunken );
+         QString Minecount = QString::number((cl+le*(y+1)+x)->GetArroundMine());
+         (cl+le*(y+1)+x)->setText(Minecount);
+     }
+    //右上
+     if((p.x+1<le)&&(p.y>=1)&&((cl+le*(y-1)+x+1)->GetVisited()==false)
+             &&((cl+le*(y-1)+x+1)->GetArroundMine()==0)){tmp.x=x+1;tmp.y=y-1;return tmp;}
+     else if((p.x+1<le)&&(p.y>=1)&&((cl+le*(y-1)+x+1)->GetVisited()==false)
+             &&((cl+le*(y-1)+x+1)->GetArroundMine()!=0))
+     {
+         (cl+le*(y-1)+x+1)->setFrameStyle( QFrame::Box | QFrame::Sunken );
+         QString Minecount = QString::number((cl+le*(y-1)+x+1)->GetArroundMine());
+         (cl+le*(y-1)+x+1)->setText(Minecount);
+     }
+    //右
+     if((p.x+1<le)&&((cl+le*y+x+1)->GetVisited()==false)
+             &&((cl+le*y+x+1)->GetArroundMine()==0)){tmp.x=x+1;tmp.y=y;return tmp;}
+     else if((p.x+1<le)&&((cl+le*y+x+1)->GetVisited()==false)
+             &&((cl+le*y+x+1)->GetArroundMine()!=0))
+     {
+         (cl+le*y+x+1)->setFrameStyle( QFrame::Box | QFrame::Sunken );
+         QString Minecount = QString::number((cl+le*y+x+1)->GetArroundMine());
+         (cl+le*y+x+1)->setText(Minecount);
+     }
+    //右下
+    if((p.x+1<le)&&(p.y+1<le)&&((cl+le*(y+1)+x+1)->GetVisited()==false)
+            &&((cl+le*(y+1)+x+1)->GetArroundMine()==0)){tmp.x=x+1;tmp.y=y+1;return tmp;}
+    else if((p.x+1<le)&&(p.y+1<le)&&((cl+le*(y+1)+x+1)->GetVisited()==false)
+            &&((cl+le*(y+1)+x+1)->GetArroundMine()==0))
+    {
+        (cl+le*(y+1)+x+1)->setFrameStyle( QFrame::Box | QFrame::Sunken );
+        QString Minecount = QString::number((cl+le*(y+1)+x+1)->GetArroundMine());
+        (cl+le*(y+1)+x+1)->setText(Minecount);
+    }
+    else{tmp.x=-1;tmp.y=-1; return tmp;}
 }
 
 
-/**********************************************************************************************/
 
-void  ClickLabel::MinerecursionRightDown(ClickLabel * cl,Point p)
-{
-    Level le = systemLevel;
-    int x = p.x, y = p.y; //当前指针坐标
-    int count = (le*y+x+cl)->GetArroundMine(); //当前块周围雷数
-    if(count!=0) //周围雷数不为0 显示个数
-    {
-         (le*y+x+cl)->setFrameStyle( QFrame::Panel | QFrame::Plain );
-        QString Minecount = QString::number(count);
-        (le*y+x+cl)->setText(Minecount);
-    }
-    else //为0，递归旁边8个块
-    {
-         (le*y+x+cl)->setFrameStyle( QFrame::Box | QFrame::Raised );  //翻开 显示0
-         (le*y+x+cl)->setText(tr("0"));
-        if(p.y+1<le)   MinerecursionDown(cl,(le*(y+1)+x+cl)->GetAddress());
-        if((p.x+1<le)&&(p.y>=1)) MinerecursionRightUp(cl,(le*(y-1)+x+1+cl)->GetAddress());
-        if(p.x+1<le) MinerecursionRight(cl,(le*y+x+1+cl)->GetAddress());
-        if((p.x+1<le)&&(p.y+1<le)) MinerecursionRightDown(cl,(le*(y+1)+x+1+cl)->GetAddress());
-    }
-}
 
-/**********************************************************************************************/
-void  ClickLabel::MinerecursionUp(ClickLabel * cl,Point p)
-{
-    Level le = systemLevel;
-    int x = p.x, y = p.y; //当前指针坐标
-    int count = (le*y+x+cl)->GetArroundMine(); //当前块周围雷数
-    if(count!=0) //周围雷数不为0 显示个数
-    {
-         (le*y+x+cl)->setFrameStyle( QFrame::Panel | QFrame::Plain );
-        QString Minecount = QString::number(count);
-        (le*y+x+cl)->setText(Minecount);
-    }
-    else //为0，递归旁边8个块
-    {
-         (le*y+x+cl)->setFrameStyle( QFrame::Box | QFrame::Raised );  //翻开 显示0
-         (le*y+x+cl)->setText(tr("0"));
-//          if((p.x>=1)&&(p.y>=1)) MinerecursionUp(cl,(le*(y-1)+x-1+cl)->GetAddress());
-//          if(p.x>=1) MinerecursionUp(cl,(le*y+x-1+cl)->GetAddress());
-//          if((p.x>=1)&&(p.y+1<le)) MinerecursionUp(cl,(le*(y+1)+x-1+cl)->GetAddress());
-        //yes
-          if(p.y>=1)  MinerecursionUp(cl,(le*(y-1)+x+cl)->GetAddress());
-    }
-}
 
-/**********************************************************************************************/
-void  ClickLabel::MinerecursionDown(ClickLabel * cl,Point p)
-{
-    Level le = systemLevel;
-    int x = p.x, y = p.y; //当前指针坐标
-    int count = (le*y+x+cl)->GetArroundMine(); //当前块周围雷数
-    if(count!=0) //周围雷数不为0 显示个数
-    {
-         (le*y+x+cl)->setFrameStyle( QFrame::Panel | QFrame::Plain );
-        QString Minecount = QString::number(count);
-        (le*y+x+cl)->setText(Minecount);
-    }
-    else //为0，递归旁边8个块
-    {
-         (le*y+x+cl)->setFrameStyle( QFrame::Box | QFrame::Raised );  //翻开 显示0
-         (le*y+x+cl)->setText(tr("0"));
-        //yes
-        if(p.y+1<le)   MinerecursionDown(cl,(le*(y+1)+x+cl)->GetAddress());
-//        if((p.x+1<le)&&(p.y>=1)) MinerecursionDown(cl,(le*(y-1)+x+1+cl)->GetAddress());
-//        if(p.x+1<le) MinerecursionDown(cl,(le*y+x+1+cl)->GetAddress());
-//        if((p.x+1<le)&&(p.y+1<le)) MinerecursionDown(cl,(le*(y+1)+x+1+cl)->GetAddress());
-    }
-}
-/**********************************************************************************************/
-void  ClickLabel::MinerecursionLeft(ClickLabel * cl,Point p)
-{
-    Level le = systemLevel;
-    int x = p.x, y = p.y; //当前指针坐标
-    int count = (le*y+x+cl)->GetArroundMine(); //当前块周围雷数
-    if(count!=0) //周围雷数不为0 显示个数
-    {
-         (le*y+x+cl)->setFrameStyle( QFrame::Panel | QFrame::Plain );
-        QString Minecount = QString::number(count);
-        (le*y+x+cl)->setText(Minecount);
-    }
-    else //为0，递归旁边8个块
-    {
-         (le*y+x+cl)->setFrameStyle( QFrame::Box | QFrame::Raised );  //翻开 显示0
-         (le*y+x+cl)->setText(tr("0"));
 
-        //yes
-          if(p.x>=1) MinerecursionLeft(cl,(le*y+x-1+cl)->GetAddress());
-//          if((p.x>=1)&&(p.y>=1)) MinerecursionLeftUp(cl,(le*(y-1)+x-1+cl)->GetAddress());
-//          if((p.x>=1)&&(p.y+1<le)) MinerecursionLeftUp(cl,(le*(y+1)+x-1+cl)->GetAddress());
-//          if(p.y>=1)  MinerecursionUp(cl,(le*(y-1)+x+cl)->GetAddress());
-    }
-}
 
-/**********************************************************************************************/
-void  ClickLabel::MinerecursionRight(ClickLabel * cl,Point p)
-{
-    Level le = systemLevel;
-    int x = p.x, y = p.y; //当前指针坐标
-    int count = (le*y+x+cl)->GetArroundMine(); //当前块周围雷数
-    if(count!=0) //周围雷数不为0 显示个数
-    {
-         (le*y+x+cl)->setFrameStyle( QFrame::Panel | QFrame::Plain );
-        QString Minecount = QString::number(count);
-        (le*y+x+cl)->setText(Minecount);
-    }
-    else //为0，递归旁边8个块
-    {
-         (le*y+x+cl)->setFrameStyle( QFrame::Box | QFrame::Raised );  //翻开 显示0
-         (le*y+x+cl)->setText(tr("0"));
-        //yes
-        if(p.x+1<le) MinerecursionRightDown(cl,(le*y+x+1+cl)->GetAddress());
-//        if(p.y+1<le)   MinerecursionDown(cl,(le*(y+1)+x+cl)->GetAddress());
-//        if((p.x+1<le)&&(p.y>=1)) MinerecursionRightDown(cl,(le*(y-1)+x+1+cl)->GetAddress());
-//        if((p.x+1<le)&&(p.y+1<le)) MinerecursionRightDown(cl,(le*(y+1)+x+1+cl)->GetAddress());
-    }
-}
-/**********************************************************************************************/
-void  ClickLabel::MinerecursionLeftDown(ClickLabel * cl,Point p)
-{
-    Level le = systemLevel;
-    int x = p.x, y = p.y; //当前指针坐标
-    int count = (le*y+x+cl)->GetArroundMine(); //当前块周围雷数
-    if(count!=0) //周围雷数不为0 显示个数
-    {
-         (le*y+x+cl)->setFrameStyle( QFrame::Panel | QFrame::Plain );
-        QString Minecount = QString::number(count);
-        (le*y+x+cl)->setText(Minecount);
-    }
-    else //为0，递归旁边8个块
-    {
-         (le*y+x+cl)->setFrameStyle( QFrame::Box | QFrame::Raised );  //翻开 显示0
-         (le*y+x+cl)->setText(tr("0"));
-//          if((p.x>=1)&&(p.y>=1)) MinerecursionLeftUp(cl,(le*(y-1)+x-1+cl)->GetAddress());
-//          if(p.x>=1) MinerecursionLeft(cl,(le*y+x-1+cl)->GetAddress());
-          if((p.x>=1)&&(p.y+1<le)) MinerecursionLeftDown(cl,(le*(y+1)+x-1+cl)->GetAddress());
-//          if(p.y>=1)  MinerecursionUp(cl,(le*(y-1)+x+cl)->GetAddress());
-    }
-}
-/**********************************************************************************************/
-void  ClickLabel::MinerecursionRightUp(ClickLabel * cl,Point p)
-{
-    Level le = systemLevel;
-    int x = p.x, y = p.y; //当前指针坐标
-    int count = (le*y+x+cl)->GetArroundMine(); //当前块周围雷数
-    if(count!=0) //周围雷数不为0 显示个数
-    {
-         (le*y+x+cl)->setFrameStyle( QFrame::Panel | QFrame::Plain );
-        QString Minecount = QString::number(count);
-        (le*y+x+cl)->setText(Minecount);
-    }
-    else //为0，递归旁边8个块
-    {
-         (le*y+x+cl)->setFrameStyle( QFrame::Box | QFrame::Raised );  //翻开 显示0
-         (le*y+x+cl)->setText(tr("0"));
-        //yes
-        if((p.x+1<le)&&(p.y>=1)) MinerecursionRightUp(cl,(le*(y-1)+x+1+cl)->GetAddress());
 
-//        if(p.y+1<le)   MinerecursionDown(cl,(le*(y+1)+x+cl)->GetAddress());
-//        if(p.x+1<le) MinerecursionRightDown(cl,(le*y+x+1+cl)->GetAddress());
-//        if((p.x+1<le)&&(p.y+1<le)) MinerecursionRightDown(cl,(le*(y+1)+x+1+cl)->GetAddress());
-    }
-}
-/**********************************************************************************************/
+
+
+
+

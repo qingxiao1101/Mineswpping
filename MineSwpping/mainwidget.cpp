@@ -51,7 +51,7 @@ void MainWidget::SetClickLabel(Level le)
         for(int x=0;x<le;x++)
         {
             (le*y+x+clickLabel)->SetAddress(x,y);
-            (le*y+x+clickLabel)->SetOpenFlag(false);
+            (le*y+x+clickLabel)->SetVisited(false);
         }
     MineLayout(clickLabel,le);
     //统计周围雷数
