@@ -15,12 +15,15 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     mainwidget.cpp \
-    clicklabel.cpp
+    clicklabel.cpp \
+    corealgorithem.cpp \
+    publicdate.cpp
 
 HEADERS  += mainwindow.h \
     mainwidget.h \
     clicklabel.h \
-    publicdate.h
+    publicdate.h \
+    corealgorithem.h
 
 FORMS    += mainwindow.ui
 

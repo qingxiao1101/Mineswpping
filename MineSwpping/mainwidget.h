@@ -14,7 +14,10 @@
 #include <QIcon>
 #include "clicklabel.h"
 #include "publicdate.h"
+#include "corealgorithem.h"
 
+class   ClickLabel;
+//enum Level;
 class MainWidget : public QWidget
 {
     Q_OBJECT
@@ -23,14 +26,17 @@ public :
     MainWidget(QWidget *parent, Level le);
     ~MainWidget();
     void MainWidgetDesk(Level le);
+    void SetStatusBar(void);
+    void  SetClickLabel(Level);
+    void SetMainWidgetLayout(Level le);
 
 private slots:
     void TimeUpdate(void);
     void TimeStop(void);
 public:
     QTimer *timer;
+     ClickLabel * clickLabel ;
 private:
-    ClickLabel * clickLabel ;
     QLabel *timeLabel, *counter;
     QPushButton * emoticon;
     QLineEdit *lineEdit;

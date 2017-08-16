@@ -48,7 +48,9 @@ OBJECTS_DIR   = ./
 SOURCES       = ../MineSwpping/main.cpp \
 		../MineSwpping/mainwindow.cpp \
 		../MineSwpping/mainwidget.cpp \
-		../MineSwpping/clicklabel.cpp qrc_rec.cpp \
+		../MineSwpping/clicklabel.cpp \
+		../MineSwpping/corealgorithem.cpp \
+		../MineSwpping/publicdate.cpp qrc_rec.cpp \
 		moc_mainwindow.cpp \
 		moc_mainwidget.cpp \
 		moc_clicklabel.cpp
@@ -56,6 +58,8 @@ OBJECTS       = main.o \
 		mainwindow.o \
 		mainwidget.o \
 		clicklabel.o \
+		corealgorithem.o \
+		publicdate.o \
 		qrc_rec.o \
 		moc_mainwindow.o \
 		moc_mainwidget.o \
@@ -179,7 +183,9 @@ DIST          = /Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/mkspecs/f
 		../MineSwpping/MineSwpping.pro ../MineSwpping/main.cpp \
 		../MineSwpping/mainwindow.cpp \
 		../MineSwpping/mainwidget.cpp \
-		../MineSwpping/clicklabel.cpp
+		../MineSwpping/clicklabel.cpp \
+		../MineSwpping/corealgorithem.cpp \
+		../MineSwpping/publicdate.cpp
 QMAKE_TARGET  = MineSwpping
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = MineSwpping.app/Contents/MacOS/MineSwpping
@@ -485,7 +491,7 @@ MineSwpping.app/Contents/Info.plist:
 	@sed -e "s,@SHORT_VERSION@,1.0,g" -e "s,@TYPEINFO@,????,g" -e "s,@ICON@,,g" -e "s,@BUNDLEIDENTIFIER@,com.yourcompany.MineSwpping,g" -e "s,@EXECUTABLE@,MineSwpping,g" -e "s,@TYPEINFO@,????,g" /Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/mkspecs/macx-clang/Info.plist.app >MineSwpping.app/Contents/Info.plist
 dist: 
 	@test -d .tmp/MineSwpping1.0.0 || mkdir -p .tmp/MineSwpping1.0.0
-	$(COPY_FILE) --parents $(DIST) .tmp/MineSwpping1.0.0/ && $(COPY_FILE) --parents ../MineSwpping/rec.qrc .tmp/MineSwpping1.0.0/ && $(COPY_FILE) --parents ../MineSwpping/mainwindow.h ../MineSwpping/mainwidget.h ../MineSwpping/clicklabel.h ../MineSwpping/publicdate.h .tmp/MineSwpping1.0.0/ && $(COPY_FILE) --parents ../MineSwpping/main.cpp ../MineSwpping/mainwindow.cpp ../MineSwpping/mainwidget.cpp ../MineSwpping/clicklabel.cpp .tmp/MineSwpping1.0.0/ && $(COPY_FILE) --parents ../MineSwpping/mainwindow.ui .tmp/MineSwpping1.0.0/ && (cd `dirname .tmp/MineSwpping1.0.0` && $(TAR) MineSwpping1.0.0.tar MineSwpping1.0.0 && $(COMPRESS) MineSwpping1.0.0.tar) && $(MOVE) `dirname .tmp/MineSwpping1.0.0`/MineSwpping1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/MineSwpping1.0.0
+	$(COPY_FILE) --parents $(DIST) .tmp/MineSwpping1.0.0/ && $(COPY_FILE) --parents ../MineSwpping/rec.qrc .tmp/MineSwpping1.0.0/ && $(COPY_FILE) --parents ../MineSwpping/mainwindow.h ../MineSwpping/mainwidget.h ../MineSwpping/clicklabel.h ../MineSwpping/publicdate.h ../MineSwpping/corealgorithem.h .tmp/MineSwpping1.0.0/ && $(COPY_FILE) --parents ../MineSwpping/main.cpp ../MineSwpping/mainwindow.cpp ../MineSwpping/mainwidget.cpp ../MineSwpping/clicklabel.cpp ../MineSwpping/corealgorithem.cpp ../MineSwpping/publicdate.cpp .tmp/MineSwpping1.0.0/ && $(COPY_FILE) --parents ../MineSwpping/mainwindow.ui .tmp/MineSwpping1.0.0/ && (cd `dirname .tmp/MineSwpping1.0.0` && $(TAR) MineSwpping1.0.0.tar MineSwpping1.0.0 && $(COMPRESS) MineSwpping1.0.0.tar) && $(MOVE) `dirname .tmp/MineSwpping1.0.0`/MineSwpping1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/MineSwpping1.0.0
 
 
 clean:compiler_clean 
@@ -521,7 +527,12 @@ qrc_rec.cpp: ../MineSwpping/rec.qrc \
 compiler_moc_header_make_all: moc_mainwindow.cpp moc_mainwidget.cpp moc_clicklabel.cpp
 compiler_moc_header_clean:
 	-$(DEL_FILE) moc_mainwindow.cpp moc_mainwidget.cpp moc_clicklabel.cpp
-moc_mainwindow.cpp: ../MineSwpping/mainwidget.h \
+moc_mainwindow.cpp: ../MineSwpping/corealgorithem.h \
+		../MineSwpping/publicdate.h \
+		../MineSwpping/clicklabel.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QLabel \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qlabel.h \
+		../MineSwpping/mainwidget.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QDebug \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qdebug.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMainWindow \
@@ -532,8 +543,6 @@ moc_mainwindow.cpp: ../MineSwpping/mainwidget.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qlineedit.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QPushButton \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qpushbutton.h \
-		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QLabel \
-		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qlabel.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QDateTime \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qdatetime.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QTimer \
@@ -546,7 +555,6 @@ moc_mainwindow.cpp: ../MineSwpping/mainwidget.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qgridlayout.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QIcon \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qicon.h \
-		../MineSwpping/clicklabel.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QAction \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qaction.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMenu \
@@ -585,11 +593,40 @@ moc_mainwidget.cpp: /Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/Q
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QIcon \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qicon.h \
 		../MineSwpping/clicklabel.h \
+		../MineSwpping/corealgorithem.h \
+		../MineSwpping/publicdate.h \
+		../MineSwpping/mainwidget.h \
 		../MineSwpping/mainwidget.h
 	/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -I/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/mkspecs/macx-clang -I/Users/xiaoqing/Programmierung/QT/Mineswepping/mineswpping/MineSwpping -I/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Headers -I/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Headers -I/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Headers -I. -F/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib ../MineSwpping/mainwidget.h -o moc_mainwidget.cpp
 
 moc_clicklabel.cpp: /Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QLabel \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qlabel.h \
+		../MineSwpping/corealgorithem.h \
+		../MineSwpping/publicdate.h \
+		../MineSwpping/clicklabel.h \
+		../MineSwpping/mainwidget.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QDebug \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qdebug.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMainWindow \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmainwindow.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QWidget \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qwidget.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QLineEdit \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qlineedit.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QPushButton \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qpushbutton.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QDateTime \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qdatetime.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QTimer \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qtimer.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QString \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qstring.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QHBoxLayout \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qboxlayout.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QGridLayout \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qgridlayout.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QIcon \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qicon.h \
 		../MineSwpping/clicklabel.h
 	/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -I/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/mkspecs/macx-clang -I/Users/xiaoqing/Programmierung/QT/Mineswepping/mineswpping/MineSwpping -I/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Headers -I/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Headers -I/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Headers -I. -F/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib ../MineSwpping/clicklabel.h -o moc_clicklabel.cpp
 
@@ -614,6 +651,11 @@ compiler_clean: compiler_rcc_clean compiler_moc_header_clean compiler_uic_clean
 ####### Compile
 
 main.o: ../MineSwpping/main.cpp ../MineSwpping/mainwindow.h \
+		../MineSwpping/corealgorithem.h \
+		../MineSwpping/publicdate.h \
+		../MineSwpping/clicklabel.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QLabel \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qlabel.h \
 		../MineSwpping/mainwidget.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QDebug \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qdebug.h \
@@ -625,8 +667,6 @@ main.o: ../MineSwpping/main.cpp ../MineSwpping/mainwindow.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qlineedit.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QPushButton \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qpushbutton.h \
-		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QLabel \
-		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qlabel.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QDateTime \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qdatetime.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QTimer \
@@ -639,7 +679,6 @@ main.o: ../MineSwpping/main.cpp ../MineSwpping/mainwindow.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qgridlayout.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QIcon \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qicon.h \
-		../MineSwpping/clicklabel.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QAction \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qaction.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMenu \
@@ -655,6 +694,11 @@ main.o: ../MineSwpping/main.cpp ../MineSwpping/mainwindow.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../MineSwpping/main.cpp
 
 mainwindow.o: ../MineSwpping/mainwindow.cpp ../MineSwpping/mainwindow.h \
+		../MineSwpping/corealgorithem.h \
+		../MineSwpping/publicdate.h \
+		../MineSwpping/clicklabel.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QLabel \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qlabel.h \
 		../MineSwpping/mainwidget.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QDebug \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qdebug.h \
@@ -666,8 +710,6 @@ mainwindow.o: ../MineSwpping/mainwindow.cpp ../MineSwpping/mainwindow.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qlineedit.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QPushButton \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qpushbutton.h \
-		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QLabel \
-		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qlabel.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QDateTime \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qdatetime.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QTimer \
@@ -680,7 +722,6 @@ mainwindow.o: ../MineSwpping/mainwindow.cpp ../MineSwpping/mainwindow.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qgridlayout.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QIcon \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qicon.h \
-		../MineSwpping/clicklabel.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QAction \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qaction.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMenu \
@@ -691,8 +732,7 @@ mainwindow.o: ../MineSwpping/mainwindow.cpp ../MineSwpping/mainwindow.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qtextstream.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMessageBox \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmessagebox.h \
-		ui_mainwindow.h \
-		../MineSwpping/publicdate.h
+		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../MineSwpping/mainwindow.cpp
 
 mainwidget.o: ../MineSwpping/mainwidget.cpp ../MineSwpping/mainwidget.h \
@@ -720,15 +760,76 @@ mainwidget.o: ../MineSwpping/mainwidget.cpp ../MineSwpping/mainwidget.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qgridlayout.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QIcon \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qicon.h \
-		../MineSwpping/clicklabel.h
+		../MineSwpping/clicklabel.h \
+		../MineSwpping/corealgorithem.h \
+		../MineSwpping/publicdate.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwidget.o ../MineSwpping/mainwidget.cpp
 
 clicklabel.o: ../MineSwpping/clicklabel.cpp /Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QMouseEvent \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qevent.h \
 		../MineSwpping/clicklabel.h \
 		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QLabel \
-		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qlabel.h
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qlabel.h \
+		../MineSwpping/corealgorithem.h \
+		../MineSwpping/publicdate.h \
+		../MineSwpping/mainwidget.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QDebug \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qdebug.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMainWindow \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmainwindow.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QWidget \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qwidget.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QLineEdit \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qlineedit.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QPushButton \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qpushbutton.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QDateTime \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qdatetime.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QTimer \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qtimer.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QString \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qstring.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QHBoxLayout \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qboxlayout.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QGridLayout \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qgridlayout.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QIcon \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qicon.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o clicklabel.o ../MineSwpping/clicklabel.cpp
+
+corealgorithem.o: ../MineSwpping/corealgorithem.cpp ../MineSwpping/corealgorithem.h \
+		../MineSwpping/publicdate.h \
+		../MineSwpping/clicklabel.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QLabel \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qlabel.h \
+		../MineSwpping/mainwidget.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QDebug \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qdebug.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QMainWindow \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qmainwindow.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QWidget \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qwidget.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QLineEdit \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qlineedit.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QPushButton \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qpushbutton.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QDateTime \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qdatetime.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QTimer \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qtimer.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QString \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/qstring.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QHBoxLayout \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qboxlayout.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/QGridLayout \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtWidgets.framework/Versions/5/Headers/qgridlayout.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/QIcon \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtGui.framework/Versions/5/Headers/qicon.h \
+		/Users/xiaoqing/Applications/Developer/Qt/5.3/clang_64/lib/QtCore.framework/Versions/5/Headers/QTime
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o corealgorithem.o ../MineSwpping/corealgorithem.cpp
+
+publicdate.o: ../MineSwpping/publicdate.cpp ../MineSwpping/publicdate.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o publicdate.o ../MineSwpping/publicdate.cpp
 
 qrc_rec.o: qrc_rec.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_rec.o qrc_rec.cpp

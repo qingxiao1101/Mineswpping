@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_ClickLabel_t {
-    QByteArrayData data[4];
-    char stringdata[30];
+    QByteArrayData data[6];
+    char stringdata[66];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -30,11 +30,14 @@ struct qt_meta_stringdata_ClickLabel_t {
 static const qt_meta_stringdata_ClickLabel_t qt_meta_stringdata_ClickLabel = {
     {
 QT_MOC_LITERAL(0, 0, 10),
-QT_MOC_LITERAL(1, 11, 7),
-QT_MOC_LITERAL(2, 19, 0),
-QT_MOC_LITERAL(3, 20, 9)
+QT_MOC_LITERAL(1, 11, 11),
+QT_MOC_LITERAL(2, 23, 0),
+QT_MOC_LITERAL(3, 24, 12),
+QT_MOC_LITERAL(4, 37, 13),
+QT_MOC_LITERAL(5, 51, 14)
     },
-    "ClickLabel\0clicked\0\0MausClick"
+    "ClickLabel\0leftclicked\0\0rightclicked\0"
+    "LeftMausClick\0RightMausClick"
 };
 #undef QT_MOC_LITERAL
 
@@ -44,23 +47,27 @@ static const uint qt_meta_data_ClickLabel[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   14, // methods
+       4,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       1,       // signalCount
+       2,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    0,   24,    2, 0x06 /* Public */,
+       1,    0,   34,    2, 0x06 /* Public */,
+       3,    0,   35,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       3,    0,   25,    2, 0x0a /* Public */,
+       4,    0,   36,    2, 0x0a /* Public */,
+       5,    0,   37,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void,
+    QMetaType::Void,
 
  // slots: parameters
+    QMetaType::Void,
     QMetaType::Void,
 
        0        // eod
@@ -71,8 +78,10 @@ void ClickLabel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
     if (_c == QMetaObject::InvokeMetaMethod) {
         ClickLabel *_t = static_cast<ClickLabel *>(_o);
         switch (_id) {
-        case 0: _t->clicked(); break;
-        case 1: _t->MausClick(); break;
+        case 0: _t->leftclicked(); break;
+        case 1: _t->rightclicked(); break;
+        case 2: _t->LeftMausClick(); break;
+        case 3: _t->RightMausClick(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -80,8 +89,14 @@ void ClickLabel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         void **func = reinterpret_cast<void **>(_a[1]);
         {
             typedef void (ClickLabel::*_t)();
-            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&ClickLabel::clicked)) {
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&ClickLabel::leftclicked)) {
                 *result = 0;
+            }
+        }
+        {
+            typedef void (ClickLabel::*_t)();
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&ClickLabel::rightclicked)) {
+                *result = 1;
             }
         }
     }
@@ -113,20 +128,26 @@ int ClickLabel::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 2)
+        if (_id < 4)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 2;
+        _id -= 4;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 2)
+        if (_id < 4)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 2;
+        _id -= 4;
     }
     return _id;
 }
 
 // SIGNAL 0
-void ClickLabel::clicked()
+void ClickLabel::leftclicked()
 {
     QMetaObject::activate(this, &staticMetaObject, 0, 0);
+}
+
+// SIGNAL 1
+void ClickLabel::rightclicked()
+{
+    QMetaObject::activate(this, &staticMetaObject, 1, 0);
 }
 QT_END_MOC_NAMESPACE

@@ -1,12 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include "publicdate.h"
 MainWindow::MainWindow(QWidget *parent, Level le)
     : QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    systemLevel = le;
 //set main windows
     this->resize(le*10, le*14);
     this->setWindowTitle(tr("扫雷"));

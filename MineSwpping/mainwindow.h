@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "corealgorithem.h"
 #include "publicdate.h"
 #include "mainwidget.h"
 #include <QMainWindow>
@@ -33,6 +34,7 @@ public:
     void MainWindowDesk(void);
     void SetAction(void);
     void SetMenuOption(void);
+//    friend void MineLayout(Level le);
 
 protected slots:
     void OpenGame(void);
@@ -40,15 +42,15 @@ protected slots:
     void SetGame1(void);
     void SetGame2(void);
     void SetGame3(void);
-
+public:
+    MainWidget * mainwidget;
 private:
     Ui::MainWindow *ui;
     QMenu * menu;
 //    QHBoxLayout *mainLayout;
-    MainWidget * mainwidget;
     QAction *openAction;
     QAction *closeAction;
     QAction *levelAction[3];
 };
-
+//int MainWindow::systemLevel = 6;
 #endif // MAINWINDOW_H
