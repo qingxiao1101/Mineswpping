@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "publicdate.h"
+#include "gameevent.h"
 MainWindow::MainWindow(QWidget *parent, Level le)
     : QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -99,6 +100,37 @@ void MainWindow::SetGame3(void)
     qDebug()<<"Level3";
 }
 
+void MainWindow::customEvent(QEvent *event)
+{
+    if(event->type() == GetGameEventType(gameOver))
+    {
+        qDebug()<<"game over";
+        event->accept();
+        QTextStream cout(stdout, QIODevice::WriteOnly);
+        QString str;
+       switch(QMessageBox::information(this, tr("提示"), tr("同学你太菜了，是否离开游戏?"),
+                                       QMessageBox::Yes | QMessageBox::No))
+       {
+             case QMessageBox::Yes: this->close(); break;
+             case QMessageBox::No:
+             default: break;
+       }
+    }
+    if(event->type() == GetGameEventType(gameWinn))
+    {
+        qDebug()<<"you winn";
+        event->accept();
+        QTextStream cout(stdout, QIODevice::WriteOnly);
+        QString str;
+       switch(QMessageBox::information(this, tr("提示"), tr("你很棒呀呀呀，是否离开游戏?"),
+                                       QMessageBox::Yes | QMessageBox::No))
+       {
+             case QMessageBox::Yes: this->close(); break;
+             case QMessageBox::No:
+             default: break;
+       }
+    }
+}
 
 
 

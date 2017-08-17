@@ -34,7 +34,8 @@ public:
     void MainWindowDesk(void);
     void SetAction(void);
     void SetMenuOption(void);
-//    friend void MineLayout(Level le);
+protected:
+    void customEvent(QEvent *event);
 
 protected slots:
     void OpenGame(void);

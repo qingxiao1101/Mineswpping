@@ -17,13 +17,15 @@ SOURCES += main.cpp\
     mainwidget.cpp \
     clicklabel.cpp \
     corealgorithem.cpp \
-    publicdate.cpp
+    publicdate.cpp \
+    gameevent.cpp
 
 HEADERS  += mainwindow.h \
     mainwidget.h \
     clicklabel.h \
     publicdate.h \
-    corealgorithem.h
+    corealgorithem.h \
+    gameevent.h
 
 FORMS    += mainwindow.ui
 

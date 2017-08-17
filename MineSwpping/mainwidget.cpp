@@ -46,7 +46,7 @@ void MainWidget::SetClickLabel(Level le)
 {
     clickLabel = new ClickLabel[le*le];
     minePointer = clickLabel;
-    sumMineCount = le-2;
+    sumMineCount = le*2;
     for(int y=0;y<le;y++)
         for(int x=0;x<le;x++)
         {

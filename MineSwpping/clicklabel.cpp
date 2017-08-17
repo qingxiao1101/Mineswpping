@@ -1,6 +1,23 @@
 #include <QMouseEvent>
 #include "clicklabel.h"
 #include <QQueue>
+#include <QEvent>
+#include <QApplication>
+
+class CustomEvent : public QEvent
+{
+public:
+    explicit CustomEvent(Type myeventtype):QEvent(myeventtype){}
+public:
+
+private:
+    int m_id;
+};
+
+void ClickLabel::Testsignal(void)
+{
+    qDebug()<<"signal ok";
+}
 bool Point::operator == (const Point& tmp)
 {
   if( (this->x == tmp.x )&&(this->y == tmp.y))
@@ -33,6 +50,7 @@ ClickLabel::ClickLabel(QWidget *parent)
 //    setText(tr("0"));
     connect(this, SIGNAL(leftclicked()), this, SLOT(LeftMausClick()));
     connect(this, SIGNAL(rightclicked()), this, SLOT(RightMausClick()));
+    connect(this, SIGNAL(gameover()), this, SLOT(Testsignal()));
 }
 
 ClickLabel::ClickLabel(const QString &text, QWidget *parent) :
@@ -84,6 +102,7 @@ bool ClickLabel::GetVisited(void)const
     return visited;
 }
 
+
 // mark: protected:------------------------------------------------
 void ClickLabel::mouseReleaseEvent(QMouseEvent *ev)
 {
@@ -107,21 +126,35 @@ void ClickLabel::leaveEvent(QEvent *)
     pa.setColor(QPalette::WindowText, Qt::darkGreen);
     setPalette(pa);
 }
+
 void ClickLabel::RightMausClick(void)
 {
     if(this->GetFlag()==false&&this->GetVisited()==false)
     {
         this->SetFlag(true);
         this->setText(tr("F"));
-        ++sumFlag;
+        if(this->GetAttribute()==9)
+        {
+            ++sumFlag;
+            if(sumFlag==sumMineCount)
+            {
+                CustomEvent * winn = new CustomEvent(GetGameEventType(gameWinn));
+                QApplication::sendEvent((QObject*)mainwindow,winn);
+            }
+        }
     }
 }
+
 void ClickLabel::LeftMausClick(void)
 {
     this->SetVisited(true);
     if(this->GetAttribute()==9)
-        //失败，游戏结束
+    {//失败，游戏结束
+        emit gameover();
         this->setText(tr("@"));
+        CustomEvent *cut = new CustomEvent(GetGameEventType(gameOver));
+        QApplication::sendEvent((QObject*)mainwindow,cut);
+    }
     else
     {
         BfsResearch(minePointer,this->GetAddress());

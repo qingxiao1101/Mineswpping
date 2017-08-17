@@ -4,6 +4,7 @@
 #include "corealgorithem.h"
 #include "publicdate.h"
 #include "mainwidget.h"
+#include <QCoreApplication>
 struct Point{
     int x,y;
     bool operator == (const Point& tmp);
@@ -34,6 +35,8 @@ public:
        // 鼠标单击信号
        void leftclicked();//IMClickLabel* label);
        void rightclicked();
+       //game over
+       void gameover();
 
    protected:
        // 鼠标单击事件
@@ -44,6 +47,7 @@ public:
    public slots:
        void LeftMausClick(void);
        void RightMausClick(void);
+       void Testsignal(void);
 
 private:
        Point position;
