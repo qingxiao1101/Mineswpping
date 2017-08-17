@@ -1,27 +1,28 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
-MainWindow::MainWindow(QWidget *parent)
+#include "publicdate.h"
+#include "gameevent.h"
+MainWindow::MainWindow(QWidget *parent, Level le)
     : QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    systemLevel = le;
 //set main windows
-    this->resize(300, 200);
+    this->resize(le*10, le*14);
     this->setWindowTitle(tr("扫雷"));
-    //set main menu
+//set main menu
         MainWindowDesk();
-    //set main widget
-    mainwidget = new MainWidget();
+ //set main widget
+    mainwidget = new MainWidget(0,le);
     this->setCentralWidget(mainwidget);
 }
-
-
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
 
 void MainWindow::MainWindowDesk(void)
 {
@@ -29,8 +30,8 @@ void MainWindow::MainWindowDesk(void)
     SetAction();
 //选项菜单 界面布局
     SetMenuOption();
-
 }
+
 void MainWindow::SetAction(void)
 {
     openAction = new QAction(tr("&开始"), this);
@@ -44,8 +45,11 @@ void MainWindow::SetAction(void)
     connect(closeAction, SIGNAL(triggered()), this, SLOT(CloseGame()));
 
     levelAction[0] = new QAction(tr("&Level1"), this);
+    connect(levelAction[0], SIGNAL(triggered()), this, SLOT(SetGame1()));
     levelAction[1] = new QAction(tr("&Level2"), this);
+    connect(levelAction[1], SIGNAL(triggered()), this, SLOT(SetGame2()));
     levelAction[2] = new QAction(tr("&Level3"), this);
+    connect(levelAction[2], SIGNAL(triggered()), this, SLOT(SetGame3()));
 }
 
 void MainWindow::SetMenuOption(void)
@@ -65,8 +69,9 @@ void MainWindow::SetMenuOption(void)
 
 void MainWindow::OpenGame(void)
 {
-   QMessageBox::warning(this, tr("提示"), tr("Game Beginn"),
-                                   QMessageBox::Yes | QMessageBox::No);
+   mainwidget-> timer->start();
+//   QMessageBox::warning(this, tr("提示"), tr("Game Beginn"),
+//                                   QMessageBox::Yes | QMessageBox::No);
 }
 
 void MainWindow::CloseGame(void)
@@ -82,6 +87,50 @@ void MainWindow::CloseGame(void)
    }
 }
 
+void MainWindow::SetGame1(void)
+{
+    qDebug()<<"Level1";
+}
+void MainWindow::SetGame2(void)
+{
+    qDebug()<<"Level2";
+}
+void MainWindow::SetGame3(void)
+{
+    qDebug()<<"Level3";
+}
+
+void MainWindow::customEvent(QEvent *event)
+{
+    if(event->type() == GetGameEventType(gameOver))
+    {
+        qDebug()<<"game over";
+        event->accept();
+        QTextStream cout(stdout, QIODevice::WriteOnly);
+        QString str;
+       switch(QMessageBox::information(this, tr("提示"), tr("同学你太菜了，是否离开游戏?"),
+                                       QMessageBox::Yes | QMessageBox::No))
+       {
+             case QMessageBox::Yes: this->close(); break;
+             case QMessageBox::No:
+             default: break;
+       }
+    }
+    if(event->type() == GetGameEventType(gameWinn))
+    {
+        qDebug()<<"you winn";
+        event->accept();
+        QTextStream cout(stdout, QIODevice::WriteOnly);
+        QString str;
+       switch(QMessageBox::information(this, tr("提示"), tr("你很棒呀呀呀，是否离开游戏?"),
+                                       QMessageBox::Yes | QMessageBox::No))
+       {
+             case QMessageBox::Yes: this->close(); break;
+             case QMessageBox::No:
+             default: break;
+       }
+    }
+}
 
 
 

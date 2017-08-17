@@ -14,10 +14,18 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    mainwidget.cpp
+    mainwidget.cpp \
+    clicklabel.cpp \
+    corealgorithem.cpp \
+    publicdate.cpp \
+    gameevent.cpp
 
 HEADERS  += mainwindow.h \
-    mainwidget.h
+    mainwidget.h \
+    clicklabel.h \
+    publicdate.h \
+    corealgorithem.h \
+    gameevent.h
 
 FORMS    += mainwindow.ui
 
